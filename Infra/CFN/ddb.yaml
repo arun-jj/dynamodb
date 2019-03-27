@@ -1,0 +1,33 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: dynamodb schema
+
+Parameters:
+  DDBTableName:
+    Description: Name to use for the dynamodb table
+    Type: String
+
+Resources:
+  DynamoDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Ref DDBTableName
+      AttributeDefinitions:
+        -
+          AttributeName: Id
+          AttributeType: S
+        -
+          AttributeName: timestamp_count
+          AttributeType: N
+      KeySchema:
+        -
+          AttributeName: Id
+          KeyType: HASH
+        -
+          AttributeName: timestamp_count
+          KeyType: RANGE
+      ProvisionedThroughput:
+        ReadCapacityUnits: 2
+        WriteCapacityUnits: 2
+      StreamSpecification:
+        StreamViewType: NEW_IMAGE
