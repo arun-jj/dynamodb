@@ -1,0 +1,22 @@
+WSTemplateFormatVersion: 2010-09-09
+
+Description: S3 bucket for scheduler
+
+Parameters:
+
+  LambdaBucket:
+    Description: The s3 bucket name
+    Type: String
+
+Resources:
+
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref LambdaBucket
+
+Outputs:
+
+  ScheduledReportsBucketName:
+    Description: The bucket name
+    Value: !Ref S3Bucket

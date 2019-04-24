@@ -1,0 +1,85 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: Lambda trigger to process dynamodb stream
+
+Parameters:
+  CodeS3Bucket:
+    Description: The S3 bucket where Lambda code is
+    Type: String
+
+  CodeS3Key:
+    Description: The S3 Key of the lambda function
+    Type: String
+
+  ResourceSecurityGroup:
+    Description: The security group that include the access to dynamodb
+    Type: String
+
+  ResourceSubnet:
+    Description: >
+      The subnet in the VPC to which the lambda require access to
+      the resource
+    Type: String
+
+  DDBTableName:
+    Description: The tablename of dynamodb
+    Type: String
+
+
+
+Resources:
+  DDBStreamProcessor:
+    Type: AWS::Lambda::Function
+    DependsOn: LambdaExecutionRole
+    Properties:
+      Code:
+        S3Bucket: !Ref CodeS3Bucket
+        S3Key: !Ref CodeS3Key
+      FunctionName: dynamodb_stream_processor
+      Handler: processor.handler
+      Role: !Ref LambdaExecutionRole
+      MemorySize: 256MB
+      Runtime: python3.6
+      Timeout: 120
+      VpcConfig:
+        SecurityGroupIds:
+          - !Ref ResourceSecurityGroup
+        SubnetIds:
+          - !Ref ResourceSubnet
+
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          -
+            Effect: Allow
+            Principle:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Path: /
+      Policies:
+        -
+          PolicyName: LambdaPolicy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              -
+                Effect: Allow
+                Action:
+                  - dynamodb:UpdateItem
+                  - dynamodb:PutItem
+                  - dynamodb:Query
+                Resource:
+                  - !Join
+                  - ""
+                  -
+                    - "arn:aws:dynamodb:"
+                    - !Ref AWS::Region
+                    - ":"
+                    - !Ref AWS::AccountId
+                    - ":/table"
+                    - !Ref DDBTableName
