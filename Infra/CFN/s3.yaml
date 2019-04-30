@@ -1,4 +1,4 @@
-WSTemplateFormatVersion: 2010-09-09
+AWSTemplateFormatVersion: 2010-09-09
 
 Description: S3 bucket for scheduler
 
@@ -17,6 +17,6 @@ Resources:
 
 Outputs:
 
-  ScheduledReportsBucketName:
+  S3BucketName:
     Description: The bucket name
     Value: !Ref S3Bucket

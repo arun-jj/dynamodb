@@ -31,3 +31,9 @@ Resources:
         WriteCapacityUnits: 2
       StreamSpecification:
         StreamViewType: NEW_IMAGE
+
+Outputs:
+
+  DDBTableName:
+    Description: The dynamodb table name
+    Value: !Ref DynamoDBTable

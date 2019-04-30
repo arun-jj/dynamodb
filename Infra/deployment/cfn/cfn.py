@@ -10,8 +10,8 @@ class StackException(Exception):
 class CfnStack:
 
     def __init__(self, profile_name):
-        session = boto3.session.Session(profile_name=profile_name)
-        self._client = session.client('cloudformation')
+        self.session = boto3.session.Session(profile_name=profile_name)
+        self._client = self.session.client('cloudformation')
 
     def is_stack_exist(self, stackname):
         try:
