@@ -51,7 +51,7 @@ Resources:
 
   DDBStreamEventSourceMaping:
     Type: AWS::Lambda::EventSourceMapping
-    DependsOn: LambdaExecutionRole
+    DependsOn: DDBStreamProcessor
     Properties:
       BatchSize: 100
       Enabled: True
@@ -113,7 +113,7 @@ Resources:
                       - !Ref AWS::Region
                       - ":"
                       - !Ref AWS::AccountId
-                      - ":/table"
+                      - ":table/"
                       - !Ref DDBTableName
                       - "/stream/*"
               -
@@ -130,5 +130,5 @@ Resources:
                       - !Ref AWS::Region
                       - ":"
                       - !Ref AWS::AccountId
-                      - ":/table/"
+                      - ":table/"
                       - !Ref DDBTableName
