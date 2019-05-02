@@ -104,11 +104,11 @@ class CfnStack:
             is_update = self.is_stack_exist(stackname)
             if is_update:
                 self.update_stack(stackname=stackname, template=template,
-                                   parameters=parameters, iam=iam)
+                                  parameters=parameters, iam=iam)
                 logging.info("Updating stack: {}".format(stackname))
             else:
                 logging.info("Creating stack: {}".format(stackname))
                 self.create_stack(stackname=stackname, template=template,
-                                   parameters=parameters, iam=iam)
+                                  parameters=parameters, iam=iam)
         except StackException as err:
             logging.error(str(err))

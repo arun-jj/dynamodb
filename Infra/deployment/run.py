@@ -46,10 +46,12 @@ def zip_lamda_file(zipfile):
 
     os.chdir(cwd)
 
+
 def upload_to_s3(stack, filename, key):
     client = stack.session.client('s3')
     client.upload_file(zipfile, stack_outputs['S3BucketName'], key)
     time.sleep(10)
+
 
 def update_lambda_function(stack, key):
     lm_client = stack.session.client('lambda')
@@ -58,6 +60,7 @@ def update_lambda_function(stack, key):
         S3Bucket=stack_outputs['S3BucketName'],
         S3Key=key
     )
+
 
 def deploy_lambda_stack(stack, zipfile):
     stack_outputs.update(stack.stack_output('my-network'))
