@@ -1,3 +1,3 @@
 
-def lambda_handler(event, context):
+def handler(event, context):
     print('processing')
