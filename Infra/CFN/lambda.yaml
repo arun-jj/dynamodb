@@ -25,7 +25,9 @@ Parameters:
     Description: The tablename of dynamodb
     Type: String
 
-
+  DDBStreamArn:
+    Description: The Arn of the ddb stream
+    Type: String
 
 Resources:
   DDBStreamProcessor:
@@ -46,6 +48,16 @@ Resources:
           - !Ref ResourceSecurityGroup
         SubnetIds:
           - !Ref ResourceSubnet
+
+  DDBStreamEventSourceMaping:
+    Type: AWS::Lambda::EventSourceMapping
+    DependsOn: LambdaExecutionRole
+    Properties:
+      BatchSize: 100
+      Enabled: True
+      EventSourceArn: !Ref DDBStreamArn
+      FunctionName: ddb_stream_processor
+      StartingPosition: TRIM_HORIZON
 
   LambdaExecutionRole:
     Type: AWS::IAM::Role
@@ -84,6 +96,29 @@ Resources:
               -
                 Effect: Allow
                 Action:
+                  - lambda:InvokeFunction
+                Resource: arn:aws:lambda:*:*:*
+              -
+                Effect: Allow
+                Action:
+                  - dynamodb:DescribeStream
+                  - dynamodb:GetRecords
+                  - dynamodb:GetShardIterator
+                  - dynamodb:ListStreams
+                Resource:
+                  - !Join
+                    - ""
+                    -
+                      - "arn:aws:dynamodb:"
+                      - !Ref AWS::Region
+                      - ":"
+                      - !Ref AWS::AccountId
+                      - ":/table"
+                      - !Ref DDBTableName
+                      - "/stream/*"
+              -
+                Effect: Allow
+                Action:
                   - dynamodb:UpdateItem
                   - dynamodb:PutItem
                   - dynamodb:Query
@@ -95,5 +130,5 @@ Resources:
                       - !Ref AWS::Region
                       - ":"
                       - !Ref AWS::AccountId
-                      - ":/table"
+                      - ":/table/"
                       - !Ref DDBTableName

@@ -37,3 +37,7 @@ Outputs:
   DDBTableName:
     Description: The dynamodb table name
     Value: !Ref DynamoDBTable
+
+  StreamArn:
+    Description: DynamoDB stream arn
+    Value: !GetAtt DynamoDBTable.StreamArn

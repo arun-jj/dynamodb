@@ -70,7 +70,8 @@ def deploy_lambda_stack(stack, zipfile):
         {'ParameterKey': 'CodeS3Key', 'ParameterValue': zipfile},
         {'ParameterKey': 'ResourceSecurityGroup', 'ParameterValue': 'sg-0c2be3c91661c5eaf'},
         {'ParameterKey':  'ResourceSubnet', 'ParameterValue': stack_outputs['Subnet1Id']},
-        {'ParameterKey': 'DDBTableName', 'ParameterValue': stack_outputs['DDBTableName']}
+        {'ParameterKey': 'DDBTableName', 'ParameterValue': stack_outputs['DDBTableName']},
+        {'ParameterKey': 'DDBStreamArn', 'ParameterValue': stack_outputs['StreamArn']}
     ]
     stackname = 'ddb-stream-lambda'
     stack.create_or_update_stack(stackname=stackname, template=tmpl,
@@ -80,7 +81,7 @@ def deploy_lambda_stack(stack, zipfile):
 if __name__ == '__main__':
     logging.basicConfig(
         format='%(asctime)s - %(levelname)s - %(message)s',
-        level=logging.DEBUG
+        level=logging.INFO
     )
 
     stack = cfn.CfnStack('default')
