@@ -130,5 +130,4 @@ Resources:
                       - !Ref AWS::Region
                       - ":"
                       - !Ref AWS::AccountId
-                      - ":table/"
-                      - !Ref DDBTableName
+                      - ":table/agg_count"
